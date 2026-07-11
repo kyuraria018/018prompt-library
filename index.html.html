@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Prompt Library</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#111;color:#eee;max-width:900px;margin:auto;padding:20px}
+h1{text-align:center}
+#search{width:100%;padding:10px;font-size:16px;margin-bottom:20px}
+.card{background:#1c1c1c;border:1px solid #333;border-radius:10px;padding:16px;margin:14px 0}
+pre{white-space:pre-wrap;word-break:break-word;background:#0d0d0d;padding:10px;border-radius:8px}
+button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
+.msg{font-size:.9em;color:#7CFC98;margin-left:10px}
+</style>
+</head>
+<body>
+<h1>AI Prompt Library</h1>
+<input id="search" placeholder="検索...">
+<div id="list"></div>
+<script>
+const prompts=[
+{title:"暑そうな表情",text:`masterpiece, best quality,
+1girl,
+flushed,
+half-closed eyes,
+hot summer day`},
+{title:"耳元でおはよう",text:`masterpiece, best quality,
+1girl,
+whispering,
+close to viewer`},
+{title:"アイスを食べる構図",text:`masterpiece, best quality,
+1girl,
+holding ice pop,
+looking at viewer`}
+];
+const list=document.getElementById("list");
+function render(q=""){
+ list.innerHTML="";
+ prompts.filter(p=>(p.title+p.text).toLowerCase().includes(q.toLowerCase())).forEach((p,i)=>{
+ const d=document.createElement("div");
+ d.className="card";
+ d.innerHTML=`<h3>${p.title}</h3><pre id="p${i}"></pre><button onclick="copyPrompt(${i})">📋 コピー</button><span class="msg" id="m${i}"></span>`;
+ list.appendChild(d);
+ document.getElementById("p"+i).textContent=p.text;
+ });
+}
+window.copyPrompt=(i)=>{
+ navigator.clipboard.writeText(prompts[i].text);
+ const m=document.getElementById("m"+i);
+ m.textContent="コピーしました！";
+ setTimeout(()=>m.textContent="",1500);
+}
+document.getElementById("search").oninput=e=>render(e.target.value);
+render();
+</script>
+</body>
+</html>
